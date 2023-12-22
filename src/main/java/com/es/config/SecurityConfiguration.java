@@ -1,6 +1,9 @@
 package com.es.config;
 
 import com.es.entity.RestBean;
+import com.es.entity.vo.response.AuthorizeVO;
+import com.es.util.JwtUtils;
+import jakarta.annotation.Resource;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,6 +15,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.SecurityFilterChain;
 
 
@@ -21,6 +25,8 @@ import java.io.PrintWriter;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+    @Resource
+    JwtUtils jwtUtils;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
@@ -60,7 +66,14 @@ public class SecurityConfiguration {
                                         Authentication authentication) throws IOException, ServletException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        response.getWriter().write(RestBean.success().asJsonString());
+        User user = (User) authentication.getPrincipal();
+        String token = jwtUtils.createJwt(user, 1, "小明");
+        AuthorizeVO vo = new AuthorizeVO();//将数据存放在用户vo中，方便前端取数据
+        vo.setExpire(jwtUtils.expireTime());
+        vo.setRole("");
+        vo.setToken(token);
+        vo.setUsername("小明");
+        response.getWriter().write(RestBean.success(vo).asJsonString());
 
     }
 
