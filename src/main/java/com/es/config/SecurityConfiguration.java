@@ -1,7 +1,9 @@
 package com.es.config;
 
+import com.auth0.jwt.interfaces.JWTVerifier;
 import com.es.entity.RestBean;
 import com.es.entity.vo.response.AuthorizeVO;
+import com.es.filter.JwtAuthorizeFilter;
 import com.es.util.JwtUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletException;
@@ -9,14 +11,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 import java.io.IOException;
@@ -27,6 +34,8 @@ import java.io.PrintWriter;
 public class SecurityConfiguration {
     @Resource
     JwtUtils jwtUtils;
+    @Resource
+    JwtAuthorizeFilter jwtAuthorizeFilter;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
@@ -49,9 +58,42 @@ public class SecurityConfiguration {
                     //将session配置为无状态，使用jwt令牌登录
                     conf.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
+                .addFilterBefore(jwtAuthorizeFilter, UsernamePasswordAuthenticationFilter.class)//将jwt过滤器添加
+                .exceptionHandling(conf -> {
+                    conf.authenticationEntryPoint(this::onUnauthorizted);
+                    conf.accessDeniedHandler(this::onAccessDeny);
+                })//异常处理器，如果未登录进行访问不会直接返回登录页面，返回json格式数据
                 .build();
     }
 
+    /**
+     * 访问本角色不具有权限的页面
+     * @param request
+     * @param response
+     * @param accessDeniedException
+     * @throws IOException
+     */
+    public void onAccessDeny(HttpServletRequest request,
+                             HttpServletResponse response,
+                             AccessDeniedException accessDeniedException) throws IOException, ServletException {
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write( RestBean.forbidden(accessDeniedException.getMessage()).asJsonString());
+    }
+
+    /**
+     * 未通过验证处理器，返回json数据 code 401，message 失败原因，未登录或登陆失败或访问不具有权限的页面，
+     * @param request
+     * @param response
+     * @param e
+     * @throws IOException
+     */
+        public void onUnauthorizted(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    AuthenticationException e) throws IOException {
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(RestBean.unauthorized(e.getMessage()).asJsonString());
+
+        }
 
     /**
      *登陆成功接口
@@ -89,7 +131,7 @@ public class SecurityConfiguration {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         PrintWriter writer = response.getWriter();
-        writer.write(RestBean.failure(401,exception.getMessage()).asJsonString());
+        writer.write(RestBean.unauthorized(exception.getMessage()).asJsonString());
     }
 
 

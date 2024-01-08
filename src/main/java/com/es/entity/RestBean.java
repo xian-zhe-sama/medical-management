@@ -12,6 +12,26 @@ public record RestBean<T>(int code, T data, String message) {
     }
 
     /**
+     * 未验证请求
+     * @param message security返回的失败信息
+     * @return 调用本类 failure方法 错误代码401
+     * @param <T>
+     */
+    public static <T> RestBean<T> unauthorized(String message) {
+        return failure(401,message);
+    }
+
+    /**
+     * 访问本角色不具有权限的页面
+     * @param message security返回的失败信息
+     * @return 调用本类 failure方法 错误代码403
+     * @param <T>
+     */
+    public static <T> RestBean<T> forbidden(String message) {
+        return failure(403,message);
+    }
+
+    /**
      * 登录失败，接收错误代码和失败信息
      * @param code 错误代码
      * @param message   失败信息
