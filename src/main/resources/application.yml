@@ -6,8 +6,11 @@ spring:
     password: root
   security:
     jwt:
-      key: abcdefg
+      key: abcdef
       expire: 7
     user:
       name: root
       password: root
+  data:
+    redis:
+      port: 6380

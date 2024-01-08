@@ -77,6 +77,7 @@ public class SecurityConfiguration {
                              HttpServletResponse response,
                              AccessDeniedException accessDeniedException) throws IOException, ServletException {
         response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
         response.getWriter().write( RestBean.forbidden(accessDeniedException.getMessage()).asJsonString());
     }
 
@@ -91,6 +92,7 @@ public class SecurityConfiguration {
                                     HttpServletResponse response,
                                     AuthenticationException e) throws IOException {
             response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
             response.getWriter().write(RestBean.unauthorized(e.getMessage()).asJsonString());
 
         }
@@ -146,6 +148,15 @@ public class SecurityConfiguration {
     public void onLogoutSuccess(HttpServletRequest request,
                                 HttpServletResponse response,
                                 Authentication authentication) throws IOException, ServletException {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        PrintWriter writer = response.getWriter();
+        String authorization = request.getHeader("Authorization");
+        if (jwtUtils.invalidateJwt(authorization)) {
+            writer.write(RestBean.success().asJsonString());
+        }else {
+            writer.write(RestBean.failure(400,"退出失败").asJsonString());
 
+        }
     }
 }
