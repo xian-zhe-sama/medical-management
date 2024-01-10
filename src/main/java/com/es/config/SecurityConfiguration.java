@@ -11,6 +11,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
@@ -116,12 +117,17 @@ public class SecurityConfiguration {
         response.setContentType("application/json");
         User user = (User) authentication.getPrincipal();
         Account account = service.findAccountByNameOrEmail(user.getUsername());
+
         String token = jwtUtils.createJwt(user, account.getId(), account.getUsername());
-        AuthorizeVO vo = new AuthorizeVO();//将数据存放在用户vo中，方便前端取数据
-        vo.setExpire(jwtUtils.expireTime());
-        vo.setRole(account.getRole());
-        vo.setToken(token);
-        vo.setUsername(account.getUsername());
+        AuthorizeVO vo = account.asViewObject(AuthorizeVO.class,v->{
+            v.setExpire(jwtUtils.expireTime());
+            v.setToken(token);
+        }) ;//将数据存放在用户vo中，方便前端取数据
+//        BeanUtils.copyProperties(account,vo);//将第一个对象的属性值复制到第二个对象的相同属性名中
+
+//        vo.setRole(account.getRole());
+
+//        vo.setUsername(account.getUsername());
         response.getWriter().write(RestBean.success(vo).asJsonString());
 
     }
