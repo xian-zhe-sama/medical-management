@@ -2,8 +2,10 @@ package com.es.config;
 
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.es.entity.RestBean;
+import com.es.entity.dto.Account;
 import com.es.entity.vo.response.AuthorizeVO;
 import com.es.filter.JwtAuthorizeFilter;
+import com.es.service.AccountService;
 import com.es.util.JwtUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletException;
@@ -36,6 +38,8 @@ public class SecurityConfiguration {
     JwtUtils jwtUtils;
     @Resource
     JwtAuthorizeFilter jwtAuthorizeFilter;
+    @Resource
+    AccountService service;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
@@ -111,12 +115,13 @@ public class SecurityConfiguration {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         User user = (User) authentication.getPrincipal();
-        String token = jwtUtils.createJwt(user, 1, "小明");
+        Account account = service.findAccountByNameOrEmail(user.getUsername());
+        String token = jwtUtils.createJwt(user, account.getId(), account.getUsername());
         AuthorizeVO vo = new AuthorizeVO();//将数据存放在用户vo中，方便前端取数据
         vo.setExpire(jwtUtils.expireTime());
-        vo.setRole("");
+        vo.setRole(account.getRole());
         vo.setToken(token);
-        vo.setUsername("小明");
+        vo.setUsername(account.getUsername());
         response.getWriter().write(RestBean.success(vo).asJsonString());
 
     }
@@ -156,7 +161,6 @@ public class SecurityConfiguration {
             writer.write(RestBean.success().asJsonString());
         }else {
             writer.write(RestBean.failure(400,"退出失败").asJsonString());
-
         }
     }
 }

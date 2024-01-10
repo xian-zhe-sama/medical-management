@@ -8,9 +8,9 @@ spring:
     jwt:
       key: abcdef
       expire: 7
-    user:
-      name: root
-      password: root
+#    user:
+#      name: root
+#      password: root
   data:
     redis:
       port: 6380
