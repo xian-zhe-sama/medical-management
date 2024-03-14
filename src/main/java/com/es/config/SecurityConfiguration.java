@@ -166,6 +166,7 @@ public class SecurityConfiguration {
         if (jwtUtils.invalidateJwt(authorization)) {
             writer.write(RestBean.success().asJsonString());
         }else {
+//            System.out.println("authorization        "+authorization);
             writer.write(RestBean.failure(400,"退出失败").asJsonString());
         }
     }
