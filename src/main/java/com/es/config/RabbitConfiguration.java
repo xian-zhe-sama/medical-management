@@ -28,8 +28,8 @@ public class RabbitConfiguration {
      * @return
      */
     @Bean
-    public MessageConverter jsonMessageConverter(ObjectMapper objectMapper) {
-        return new Jackson2JsonMessageConverter(objectMapper);
+    public MessageConverter jsonMessageConverter( ) {
+        return new Jackson2JsonMessageConverter();
     }
 
 }

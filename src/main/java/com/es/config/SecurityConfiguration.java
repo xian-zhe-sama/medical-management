@@ -45,7 +45,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(conf -> {
-                    conf.requestMatchers("/api/auth/**").permitAll();
+                    conf.requestMatchers("/api/auth/**","/error").permitAll();
                     conf.anyRequest().authenticated();//全部请求都要验证
                 })
                 .formLogin(conf -> {
