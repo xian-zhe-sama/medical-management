@@ -9,8 +9,11 @@ import lombok.Data;
 
 import java.util.Date;
 
+/**
+ * 用户实体类
+ */
 @Data
-@TableName("db_account")
+@TableName("account")
 @AllArgsConstructor
 public class Account implements BaseData {
     @TableId(type = IdType.AUTO)
