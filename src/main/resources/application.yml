@@ -24,4 +24,4 @@ spring:
 #      password: root
   data:
     redis:
-      port: 6380
+      port: 6379

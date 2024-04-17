@@ -2,7 +2,7 @@ package com.es.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.es.entity.dto.Patient;
+import com.es.entity.Patient;
 import com.es.mapper.PatientMapper;
 import com.es.service.PatientService;
 

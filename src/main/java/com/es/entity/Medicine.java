@@ -1,4 +1,4 @@
-package com.es.entity.dto;
+package com.es.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -56,12 +57,12 @@ public class Medicine implements Serializable {
     /**
      * 入库时间
      */
-    private LocalDateTime inboundTime;
+    private LocalDate inboundTime;
 
     /**
      * 过期时间
      */
-    private LocalDateTime expirationTime;
+    private LocalDate expirationTime;
 
     @Override
     public String toString() {

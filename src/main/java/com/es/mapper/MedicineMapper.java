@@ -2,7 +2,7 @@ package com.es.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.es.entity.dto.Medicine;
+import com.es.entity.Medicine;
 
 /**
  * <p>

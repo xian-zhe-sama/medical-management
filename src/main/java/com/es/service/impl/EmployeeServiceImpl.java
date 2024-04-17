@@ -2,7 +2,7 @@ package com.es.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.es.entity.dto.Employee;
+import com.es.entity.Employee;
 import com.es.mapper.EmployeeMapper;
 import com.es.service.EmployeeService;
 import org.springframework.stereotype.Service;

@@ -2,7 +2,7 @@ package com.es.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.es.entity.dto.Medicalrecord;
+import com.es.entity.Medicalrecord;
 
 /**
  * <p>

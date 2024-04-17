@@ -1,15 +1,22 @@
 package com.es.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.es.entity.dto.Account;
+import com.es.entity.Account;
 import com.es.entity.vo.request.ConfirmRestVO;
 import com.es.entity.vo.request.EmailRegisterVO;
 import com.es.entity.vo.request.EmailResetVO;
 import com.es.mapper.AccountMapper;
 import com.es.service.AccountService;
+import com.es.util.CacheCleanUtils;
 import com.es.util.Const;
 import com.es.util.FlowUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -20,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -34,6 +42,13 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     FlowUtils flowUtils;
     @Resource
     PasswordEncoder encoder;
+    @Resource
+    ObjectMapper objectMapper;
+    @Resource
+    AccountMapper accountMapper;
+    @Resource
+    CacheCleanUtils cacheCleanUtils;
+    private final String cacheKey = "findAllAccountByPage:*";
     /**
      *
      * @param username the username identifying the user whose data is required.
@@ -169,6 +184,13 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return null;
     }
 
+    @Override
+    public boolean resetEmailAccount(Account account) {
+        String password = encoder.encode(account.getPassword());
+        int id = account.getId();
+        return this.update().eq("id", id).set("password", password).update();
+    }
+
     /**
      * 邮箱是否已存在
      * @param email
@@ -186,6 +208,85 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
      */
     private boolean existsAccountByUsername(String username) {
         return this.baseMapper.exists(Wrappers.<Account>query().eq("username", username));
+    }
+
+
+
+    @Override
+    public IPage<Account> findAllAccountByPage(int currentPage) {
+        // 构建Redis中存储的key
+        String key = "findAllAccountByPage:" + currentPage + ":" + 10;
+        // 尝试从Redis获取用户信息的分页数据
+        String dataFromRedis = stringRedisTemplate.opsForValue().get(key);
+        if (dataFromRedis != null) {
+            try {
+                // 如果Redis中有数据，则直接反序列化返回
+                return objectMapper.readValue(dataFromRedis, new TypeReference<Page<Account>>() {
+                });
+            } catch (JsonProcessingException e) {
+                // 日志打印反序列化错误
+                e.printStackTrace();
+            }
+        }
+        // 创建用户信息分页对象，设置当前页码和每页记录数
+        Page<Account> accountIPage = new Page<>(currentPage, 10);
+        // 查询数据库，并封装用户信息及所属部门名称
+        IPage<Account> result = page(accountIPage);
+        result.getRecords().forEach(account -> {
+            account.setPassword(null);
+        });
+        try {
+            // 将查询结果序列化，并存储到Redis中，设置过期时间为60分钟
+            String resultJson = objectMapper.writeValueAsString(result);
+            stringRedisTemplate.opsForValue().set(key, resultJson, 60, TimeUnit.MINUTES);
+        } catch (JsonProcessingException e) {
+            // 日志打印序列化错误
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public boolean deleteAccountById(Integer accountId) {
+        boolean isSuccess = removeById(accountId);
+        if (isSuccess) {
+            cacheCleanUtils.sendCacheCleaningMessage(cacheKey);
+        }
+        return isSuccess;
+    }
+
+    @Override
+    public boolean batchDeleteAccountById(List<Integer> accountIds) {
+        int isSuccess = accountMapper.deleteBatchIds(accountIds);
+        if (isSuccess>0) {
+            cacheCleanUtils.sendCacheCleaningMessage(cacheKey);
+        }
+        return isSuccess > 0;
+    }
+
+    @Override
+    public IPage<Account> findAccountByName(String userName, int currentPage) {
+        Page<Account> page = new Page<>();
+        if (userName != null) {
+            return page(page, new QueryWrapper<Account>().like("username", userName));
+        }
+        return findAllAccountByPage(currentPage);
+    }
+
+    @Override
+    public String saveAccountOne(Account account) {
+        if (existsAccountByEmail(account.getEmail())) {
+            return "邮箱已存在";
+        }
+        if (existsAccountByUsername(account.getUsername())) {
+            return "用户名已存在";
+        }
+        account.setPassword(encoder.encode(account.getPassword()));
+        boolean isSuccess = saveOrUpdate(account);
+        if (isSuccess) {
+            cacheCleanUtils.sendCacheCleaningMessage(cacheKey);
+        }
+        return "保存成功";
     }
 
 }

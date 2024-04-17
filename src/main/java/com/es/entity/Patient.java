@@ -1,4 +1,4 @@
-package com.es.entity.dto;
+package com.es.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 医生实体类
+ * 
  * </p>
  *
  * @author es
@@ -21,25 +21,25 @@ import java.io.Serializable;
 @Setter
 @Getter
 @AllArgsConstructor
-@TableName("doctor")
-public class Doctor implements Serializable {
+@TableName("patient")
+public class Patient implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 医生ID
+     * 病人ID
      */
-    @TableId(value = "doctor_id", type = IdType.AUTO)
-    private Integer doctorId;
+    @TableId(value = "patient_id", type = IdType.AUTO)
+    private Integer patientId;
 
     /**
-     * 医生姓名
+     * 病人姓名
      */
     private String name;
 
     /**
-     * 性别
+     * 性别（M表示男性，F表示女性）
      */
     private String gender;
 
@@ -49,24 +49,31 @@ public class Doctor implements Serializable {
     private Integer age;
 
     /**
-     * 所属科室ID
+     * 地址
      */
-    private Integer departmentId;
+    private String address;
 
     /**
-     * 手机号
+     * 电话号码
      */
     private String phone;
 
+    /**
+    对应的用户id
+     */
+    private Integer accountId;
+
+
     @Override
     public String toString() {
-        return "Doctor{" +
-        "doctorId = " + doctorId +
+        return "Patient{" +
+        "patientId = " + patientId +
         ", name = " + name +
         ", gender = " + gender +
         ", age = " + age +
-        ", departmentId = " + departmentId +
+        ", address = " + address +
         ", phone = " + phone +
+        ", accountId = " + accountId +
         "}";
     }
 }

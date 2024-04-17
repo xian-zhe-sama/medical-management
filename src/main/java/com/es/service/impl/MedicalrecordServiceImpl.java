@@ -2,7 +2,7 @@ package com.es.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.es.entity.dto.Medicalrecord;
+import com.es.entity.Medicalrecord;
 import com.es.mapper.MedicalrecordMapper;
 import com.es.service.MedicalrecordService;
 import org.springframework.stereotype.Service;

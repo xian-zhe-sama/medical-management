@@ -1,5 +1,6 @@
 package com.es.controller;
 
+import com.es.entity.Account;
 import com.es.entity.RestBean;
 import com.es.entity.vo.request.ConfirmRestVO;
 import com.es.entity.vo.request.EmailRegisterVO;
@@ -69,8 +70,10 @@ public class AuthorizeController {
         return this.messageHandle(vo,service::resetEmailAccountPassword);
     }
 
+
+
     private <T> RestBean<Void> messageHandle(T vo, Function<T, String> function) {
-        return messageHandle(()->function.apply(vo));
+        return messageHandle(() -> function.apply(vo));
     }
     /**
      * 处理信息结果并返回相应结果。

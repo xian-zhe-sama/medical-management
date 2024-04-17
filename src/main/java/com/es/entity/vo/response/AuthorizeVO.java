@@ -14,4 +14,7 @@ public class AuthorizeVO {
     private String role;
     private String token;
     private Date expire;
+    private int id;
+    private String email;
+    private Date registerTime;
 }

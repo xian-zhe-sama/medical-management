@@ -2,7 +2,7 @@ package com.es.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.es.entity.dto.Employee;
+import com.es.entity.Employee;
 
 /**
  * <p>

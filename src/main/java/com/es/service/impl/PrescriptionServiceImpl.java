@@ -2,7 +2,7 @@ package com.es.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.es.entity.dto.Prescription;
+import com.es.entity.Prescription;
 import com.es.mapper.PrescriptionMapper;
 import com.es.service.PrescriptionService;
 import org.springframework.stereotype.Service;

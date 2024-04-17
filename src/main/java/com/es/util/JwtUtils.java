@@ -154,13 +154,8 @@ public class JwtUtils {
      */
     private String convertToken(String headerToken) {
         if (headerToken == null || !headerToken.startsWith("Bearer ")) {
-            if (headerToken != null) {
-//                System.out.println("是否以Bearer 开头"+headerToken.startsWith("Bearer "));
-            }
             return null;
         }
-//        System.out.println("是否以Bearer 开头" + headerToken.startsWith("Bearer "));
         return headerToken.substring(7);
     }
-
 }

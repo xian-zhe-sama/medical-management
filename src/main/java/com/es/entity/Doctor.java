@@ -1,16 +1,20 @@
-package com.es.entity.dto;
+package com.es.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * <p>
- * 
+ * 医生实体类
  * </p>
  *
  * @author es
@@ -18,27 +22,24 @@ import java.io.Serializable;
  */
 @Setter
 @Getter
-@TableName("nurse")
-public class Nurse implements Serializable {
+@AllArgsConstructor
+@NoArgsConstructor
+@TableName("doctor")
+public class Doctor implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 护士编号
+     * 医生ID
      */
-    @TableId("nurse_id")
-    private Integer nurseId;
+    @TableId(value = "doctor_id", type = IdType.AUTO)
+    private Integer doctorId;
 
     /**
-     * 护士姓名
+     * 医生姓名
      */
     private String name;
-
-    /**
-     * 护士年龄
-     */
-    private Integer age;
 
     /**
      * 性别
@@ -46,30 +47,29 @@ public class Nurse implements Serializable {
     private String gender;
 
     /**
-     * 手机号
+     * 生日
      */
-    private String phone;
+    private LocalDate birthday;
 
     /**
-     * 对应部门编号
+     * 所属科室ID
      */
     private Integer departmentId;
 
     /**
-     * 对应用户编号
+     * 手机号
      */
-    private Integer accountId;
+    private String phone;
 
     @Override
     public String toString() {
-        return "Nurse{" +
-        "nurseId = " + nurseId +
+        return "Doctor{" +
+        "doctorId = " + doctorId +
         ", name = " + name +
-        ", age = " + age +
         ", gender = " + gender +
-        ", phone = " + phone +
+        ", age = " + birthday +
         ", departmentId = " + departmentId +
-        ", accountId = " + accountId +
+        ", phone = " + phone +
         "}";
     }
 }
