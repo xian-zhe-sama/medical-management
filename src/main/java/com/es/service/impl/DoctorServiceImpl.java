@@ -114,12 +114,11 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
      * @return Doctor 返回查询到的医生对象。如果找不到对应医生，返回null。
      */
     @Override
-    public Doctor findDoctorById(Integer doctorId) {
+    public Doctor findDoctorById(Integer accountId) {
         // 创建查询包装器，并设置查询条件为医生ID等于传入的doctorId
-        QueryWrapper<Doctor> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("doctor_id",doctorId);
+        return doctorMapper.findDoctorById(accountId);
         // 根据查询条件获取唯一的医生记录
-        return this.getOne(queryWrapper);
+
     }
 
     @Override

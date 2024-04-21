@@ -117,14 +117,8 @@ public class SecurityConfiguration {
         AuthorizeVO vo = account.asViewObject(AuthorizeVO.class,v->{
             v.setExpire(jwtUtils.expireTime());
             v.setToken(token);
-        }) ;//将数据存放在用户vo中，方便前端取数据
-//        BeanUtils.copyProperties(account,vo);//将第一个对象的属性值复制到第二个对象的相同属性名中
-
-//        vo.setRole(account.getRole());
-
-//        vo.setUsername(account.getUsername());
+        }) ;
         response.getWriter().write(RestBean.success(vo).asJsonString());
-
     }
 
     /**

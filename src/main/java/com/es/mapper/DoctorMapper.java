@@ -33,5 +33,6 @@ public interface DoctorMapper extends BaseMapper<Doctor> {
             // 这里可以继续映射其他字段
     })
     IPage<DoctorDTO> findDoctorWithDepartmentNameByName(String name,Page<?>page);
-
+    @Select("SELECT d.* from account a left join doctor d on d.account_id = a.id where d.account_id=#{accountId} ")
+    Doctor findDoctorById(int accountId);
 }

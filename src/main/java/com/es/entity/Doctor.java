@@ -60,6 +60,7 @@ public class Doctor implements Serializable {
      * 手机号
      */
     private String phone;
+    private String assessment;
 
     @Override
     public String toString() {

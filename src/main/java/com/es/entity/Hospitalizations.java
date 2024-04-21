@@ -55,8 +55,12 @@ public class Hospitalizations implements Serializable {
      */
     private String remark;
 
-
-
+    private String status;
+    private String description;
+    private String relativesPhone;
+    private String phone;
+    private String space;
+    private String progress;
     @Override
     public String toString() {
         return "Hospitalizations{" +

@@ -2,6 +2,10 @@ package com.es.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -14,6 +18,10 @@ import java.time.LocalDateTime;
  * @author es
  * @since 2024-04-17
  */
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Schedule implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -38,39 +46,7 @@ public class Schedule implements Serializable {
      * 工作结束时间
      */
     private LocalDateTime endDate;
-
-    public Integer getScheduleId() {
-        return scheduleId;
-    }
-
-    public void setScheduleId(Integer scheduleId) {
-        this.scheduleId = scheduleId;
-    }
-
-    public LocalDateTime getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
-    }
-
-    public Integer getDoctorId() {
-        return doctorId;
-    }
-
-    public void setDoctorId(Integer doctorId) {
-        this.doctorId = doctorId;
-    }
-
-    public LocalDateTime getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
-    }
-
+    private Integer limit;
     @Override
     public String toString() {
         return "Schedule{" +

@@ -37,8 +37,9 @@ public class DoctorController {
     }
 
     @GetMapping("/getById")
-    public RestBean<Doctor> findDoctorById(@RequestBody Integer doctorId) {
-        Doctor doctorById = doctorService.findDoctorById(doctorId);
+    public RestBean<Doctor> findDoctorById(@RequestParam Integer accountId) {
+        Doctor doctorById = doctorService.findDoctorById(accountId);
+        System.out.println("accountId"+accountId);
         if (doctorById != null) {
             return RestBean.success(doctorById);
         } else {

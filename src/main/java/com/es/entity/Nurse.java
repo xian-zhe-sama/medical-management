@@ -64,6 +64,7 @@ public class Nurse implements Serializable {
      * 对应用户编号
      */
     private Integer accountId;
+    private String assessment;
 
     @Override
     public String toString() {
