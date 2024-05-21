@@ -26,7 +26,7 @@ public interface EquipmentMapper extends BaseMapper<Equipment> {
             // 这里可以继续映射其他字段
     })
     IPage<EquipmentDTO> findAllEquipmentWithDepartmentName(Page<?> page);
-    @Select("SELECT e.*, dp.name AS departmentName FROM equipment e LEFT JOIN department dp ON e.department_id = dp.department_id where d.name like concat('%',#{name},'%') ")
+    @Select("SELECT e.*, dp.name AS departmentName FROM equipment e LEFT JOIN department dp ON e.department_id = dp.department_id where e.name like concat('%',#{name},'%') ")
     @Results({
             @Result(property = "departmentName", column = "departmentName"),
             // 这里可以继续映射其他字段

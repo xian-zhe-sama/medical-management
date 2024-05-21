@@ -289,4 +289,13 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return "保存成功";
     }
 
+    @Override
+    public String changeAccountOne(Account account) {
+        boolean isSuccess = saveOrUpdate(account);
+        if (isSuccess) {
+            cacheCleanUtils.sendCacheCleaningMessage(cacheKey);
+            return "保存成功";
+        }
+        return "出现错误";
+    }
 }

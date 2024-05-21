@@ -112,7 +112,6 @@ public class SecurityConfiguration {
         response.setContentType("application/json");
         User user = (User) authentication.getPrincipal();
         Account account = service.findAccountByNameOrEmail(user.getUsername());
-
         String token = jwtUtils.createJwt(user, account.getId(), account.getUsername());
         AuthorizeVO vo = account.asViewObject(AuthorizeVO.class,v->{
             v.setExpire(jwtUtils.expireTime());

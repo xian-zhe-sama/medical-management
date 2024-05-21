@@ -89,6 +89,27 @@ public class NurseServiceImpl extends ServiceImpl<NurseMapper, Nurse> implements
     }
 
     @Override
+    public IPage<NurseDTO> findDepartmentNurseByPage(int currentPage,int departmentId) {
+        // 创建护士信息分页对象，设置当前页码和每页记录数
+        Page<NurseDTO> nurseIPage = new Page<>(currentPage, 10);
+        // 查询数据库，并封装护士信息及所属部门名称
+        IPage<NurseDTO> result = baseMapper.findDepartmentNurseWithDepartmentName(departmentId,nurseIPage);
+        return result;
+    }
+
+    @Override
+    public IPage<NurseDTO> findDepartmentNurseByName(String name,int departmentId, int currentPage) {
+        Page<NurseDTO> page = new Page<>(currentPage, 10);
+        if (name != null&& !name.trim().isEmpty()) {
+            IPage<NurseDTO> result = nurseMapper.findDepartmentNurseWithDepartmentNameByName(name,departmentId,page);
+            System.out.println(result.getRecords());
+            return result;
+        }else{
+            return findDepartmentNurseByPage(currentPage,departmentId);
+        }
+    }
+
+    @Override
     public boolean deleteNurseById(Integer nurseId) {
         if (this.removeById(nurseId)) {
             // 清除 findAllNurseByPage 方法相关的缓存

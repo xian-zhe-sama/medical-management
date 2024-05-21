@@ -7,6 +7,7 @@ import com.es.entity.Doctor;
 import com.es.entity.Nurse;
 import com.es.entity.dto.DoctorDTO;
 import com.es.entity.dto.NurseDTO;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -35,5 +36,17 @@ public interface NurseMapper extends BaseMapper<Nurse> {
     })
     IPage<NurseDTO> findNurseWithDepartmentNameByName(String name,Page<?>page);
 
+    @Select("SELECT n.*, dp.name AS departmentName FROM nurse n LEFT JOIN department dp ON n.department_id = dp.department_id where n.department_id = #{departmentId}")
+    @Results({
+            @Result(property = "departmentName", column = "departmentName"),
+            // 这里可以继续映射其他字段
+    })
+    IPage<NurseDTO> findDepartmentNurseWithDepartmentName(@Param("departmentId")int departmentId, Page<?> page);
 
+    @Select("SELECT n.*, dp.name AS departmentName FROM nurse n LEFT JOIN department dp ON n.department_id = dp.department_id where n.name like concat('%',#{name},'%') and n.department_id = #{departmentId}")
+    @Results({
+            @Result(property = "departmentName", column = "departmentName"),
+            // 这里可以继续映射其他字段
+    })
+    IPage<NurseDTO> findDepartmentNurseWithDepartmentNameByName(String name,int departmentId,Page<?>page);
 }

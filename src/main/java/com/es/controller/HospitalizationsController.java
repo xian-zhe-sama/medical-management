@@ -65,7 +65,7 @@ import java.util.List;
 
      @PostMapping("/deleteById")
      public RestBean<Void> deleteHospitalizationsById(@RequestBody Hospitalizations hospitalizations) {
-         if (hospitalizationsService.deleteHospitalizationsById(hospitalizations.getDepartmentId())) {
+         if (hospitalizationsService.deleteHospitalizationsById(hospitalizations.getHospitalizationsId())) {
              return RestBean.success();
          } else {
              return RestBean.failure(500, "删除失败");

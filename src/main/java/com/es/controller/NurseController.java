@@ -41,6 +41,15 @@ public class NurseController {
             return RestBean.failure(500, "获取失败");
         }
     }
+    @GetMapping("/getByDepartment")
+    public RestBean<IPage<NurseDTO>> findAllNurseByPage(@RequestParam int currentPage,@RequestParam int departmentId) {
+        IPage<NurseDTO> allNurseByPage = nurseService.findDepartmentNurseByPage(currentPage,departmentId);
+        if (allNurseByPage != null) {
+            return RestBean.success(allNurseByPage);
+        } else {
+            return RestBean.failure(500, "获取失败");
+        }
+    }
 
     @GetMapping("/getById")
     public RestBean<Nurse> findNurseById(@RequestBody Integer nurseId) {
@@ -63,7 +72,17 @@ public class NurseController {
             return RestBean.failure(500, "获取失败");
         }
     }
-
+    @GetMapping("/getDepartmentByName")
+    public RestBean<IPage<NurseDTO>> findDepartmentNurseByName(@RequestParam(name = "name") String name,@RequestParam int departmentId,
+                                                     @RequestParam(name = "currentPage", defaultValue = "1") int currentPage) {
+        IPage<NurseDTO> nurseByName = nurseService.findDepartmentNurseByName(name, departmentId,currentPage);
+        System.out.println("name"+name);
+        if (nurseByName != null) {
+            return RestBean.success(nurseByName);
+        } else {
+            return RestBean.failure(500, "获取失败");
+        }
+    }
     @PostMapping("/deleteById")
     public RestBean<Void> deleteNurseById(@RequestBody NurseDTO nurseDTO) {
         if (nurseService.deleteNurseById(nurseDTO.getNurseId())) {

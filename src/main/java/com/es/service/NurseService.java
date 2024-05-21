@@ -27,4 +27,6 @@ public interface NurseService extends IService<Nurse> {
     public Nurse findNurseById(Integer nurseId);
     public IPage<NurseDTO> findNurseByName(String name,int currentPage);
     public IPage<NurseDTO> findNurseByDepartmentId(Integer departmentId,int currentPage);
+    public IPage<NurseDTO> findDepartmentNurseByPage(int currentPage, int departmentId);
+    public IPage<NurseDTO> findDepartmentNurseByName(String name,int departmentId,int currentPage);
 }

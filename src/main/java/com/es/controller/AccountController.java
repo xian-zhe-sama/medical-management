@@ -71,4 +71,13 @@ public class AccountController {
             return RestBean.failure(500, s);
         }
     }
+    @PostMapping("/change")
+    public RestBean<String> changeAccountOne(@RequestBody Account account) {
+        String s = service.changeAccountOne(account);
+        if (s.equals("保存成功")) {
+            return RestBean.success(s);
+        } else {
+            return RestBean.failure(500, s);
+        }
+    }
 }

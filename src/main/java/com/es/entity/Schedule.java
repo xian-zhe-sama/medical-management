@@ -46,7 +46,7 @@ public class Schedule implements Serializable {
      * 工作结束时间
      */
     private LocalDateTime endDate;
-    private Integer limit;
+    private Integer limitPeople;
     @Override
     public String toString() {
         return "Schedule{" +

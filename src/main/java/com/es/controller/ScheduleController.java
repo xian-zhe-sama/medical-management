@@ -35,12 +35,22 @@ public class ScheduleController {
         }
     }
 
+    /**
+     * 根据医生ID获取排班信息
+     *
+     * @param doctorId 医生的ID，用于查询该医生的排班信息
+     * @param currentPage 当前页码，用于分页查询
+     * @return RestBean<IPage<ScheduleDTO>> 返回一个封装了排班信息的RestBean对象，如果查询成功，返回排班信息的页面；如果失败，返回错误信息。
+     */
     @GetMapping("/getById")
     public RestBean<IPage<ScheduleDTO>> findScheduleById(@RequestParam Integer doctorId,@RequestParam int currentPage) {
+        // 通过医生ID和当前页码查询排班信息
         IPage<ScheduleDTO> scheduleById = scheduleService.findScheduleById(doctorId,currentPage);
         if (scheduleById != null) {
+            // 查询结果不为空时，返回成功结果，携带排班信息
             return RestBean.success(scheduleById);
         } else {
+            // 查询结果为空时，返回失败结果，携带错误码和错误信息
             return RestBean.failure(500, "获取失败");
         }
     }

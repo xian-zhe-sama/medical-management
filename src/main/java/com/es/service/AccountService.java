@@ -27,4 +27,5 @@ public interface AccountService extends IService<Account>, UserDetailsService {
     boolean batchDeleteAccountById(List<Integer> accountIds);
     IPage<Account> findAccountByName(String name,int currentPage);
     String saveAccountOne(Account account);
+    String changeAccountOne(Account account);
 }
